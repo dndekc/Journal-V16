@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Електронний журнал реєстрації заявок — Відділ №16</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3F5F7;
+    --surface:#FFFFFF;
+    --surface-2:#FAFBFC;
+    --ink:#1B2A3D;
+    --ink-soft:#5B6B7F;
+    --ink-faint:#8B98A8;
+    --border:#DCE1E7;
+    --border-strong:#C3CBD4;
+    --accent:#2C5F8A;
+    --accent-ink:#1E4463;
+    --accent-soft:#E7EFF5;
+    --teal:#3E8E8A;
+    --amber:#B98A2E;
+    --brick:#B4483A;
+    --brick-soft:#F7EAE8;
+    --green:#3E7A44;
+    --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+    --radius: 3px;
+    --shadow-1: 0 1px 2px rgba(27,42,61,0.06), 0 1px 1px rgba(27,42,61,0.04);
+    --shadow-2: 0 8px 28px rgba(27,42,61,0.18);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--sans);
+    background:var(--bg);
+    color:var(--ink);
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  #app{max-width:1400px;margin:0 auto;padding:20px 24px 64px;}
+
+  /* ---------- Header ---------- */
+  .topbar{
+    display:flex;align-items:flex-start;justify-content:space-between;
+    gap:16px;padding-bottom:18px;margin-bottom:16px;
+    border-bottom:2px solid var(--ink);
+  }
+  .brand{display:flex;align-items:flex-start;gap:12px;}
+  .brand svg{flex:none;margin-top:3px;}
+  .brand h1{font-size:19px;font-weight:600;margin:0 0 3px;letter-spacing:-0.01em;}
+  .org-line{margin:0;color:var(--ink-soft);font-size:12.5px;font-family:var(--mono);}
+  .topbar-actions{display:flex;gap:8px;flex:none;padding-top:2px;}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    font-family:var(--sans);
+    font-size:13px;font-weight:500;
+    border-radius:var(--radius);
+    border:1px solid var(--border-strong);
+    background:var(--surface);
+    color:var(--ink);
+    padding:8px 14px;
+    cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;
+    transition:background .12s ease, border-color .12s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{background:var(--surface-2);border-color:var(--ink-faint);}
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--accent-ink);border-color:var(--accent-ink);}
+  .btn-ghost{background:transparent;}
+  .btn-danger{background:var(--brick);border-color:var(--brick);color:#fff;}
+  .btn-danger:hover{background:#96382d;border-color:#96382d;}
+  .btn-danger-outline{background:transparent;border-color:var(--brick);color:var(--brick);}
+  .btn-danger-outline:hover{background:var(--brick-soft);}
+  .btn-sm{padding:5px 9px;font-size:12px;}
+  .btn-icon{padding:6px;width:30px;height:30px;justify-content:center;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .link-danger{
+    background:none;border:none;color:var(--ink-faint);font-family:var(--sans);
+    font-size:12px;cursor:pointer;text-decoration:underline;text-underline-offset:2px;
+    padding:0;
+  }
+  .link-danger:hover{color:var(--brick);}
+
+  /* ---------- Toolbar ---------- */
+  .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+  .search-wrap{position:relative;flex:1;min-width:220px;max-width:360px;}
+  .search-wrap input{
+    width:100%;padding:8px 10px 8px 30px;border:1px solid var(--border-strong);
+    border-radius:var(--radius);font-family:var(--sans);font-size:13px;background:var(--surface);
+  }
+  .search-wrap input:focus{outline:none;border-color:var(--accent);}
+  .search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:.5;}
+  select.filter-select{
+    padding:8px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);
+    background:var(--surface);font-family:var(--sans);font-size:13px;color:var(--ink);
+  }
+  .toolbar-spacer{flex:1;}
+  .row-count{font-family:var(--mono);font-size:12px;color:var(--ink-soft);white-space:nowrap;}
+
+  /* ---------- Table ---------- */
+  .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:auto;box-shadow:var(--shadow-1);}
+  table{border-collapse:collapse;width:100%;min-width:900px;}
+  thead th{
+    position:sticky;top:0;background:var(--ink);color:#fff;
+    font-size:11px;font-weight:600;text-transform:none;letter-spacing:0.01em;
+    text-align:left;padding:10px 12px;border-right:1px solid rgba(255,255,255,0.08);
+    white-space:nowrap;
+  }
+  thead th:first-child{width:44px;text-align:center;}
+  thead th.col-actions{width:88px;}
+  .th-filter-btn{
+    background:none;border:none;color:inherit;font:inherit;cursor:pointer;
+    display:inline-flex;align-items:center;gap:5px;padding:0;position:relative;
+  }
+  .th-filter-btn:hover{opacity:.85;}
+  .th-filter-btn svg{opacity:.75;flex:none;}
+  .th-filter-dot{
+    width:6px;height:6px;border-radius:50%;background:#7FC4C0;flex:none;
+    position:absolute;top:-2px;right:-9px;
+  }
+  tbody td{
+    padding:9px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);
+    vertical-align:top;font-size:13px;max-width:260px;
+  }
+  tbody td:first-child{text-align:center;color:var(--ink-faint);font-family:var(--mono);font-size:12px;}
+  tbody tr:hover{background:var(--surface-2);cursor:pointer;}
+  tbody tr:last-child td{border-bottom:none;}
+  td.cell-mono{font-family:var(--mono);font-size:12.5px;}
+  td.cell-empty{color:var(--ink-faint);font-style:italic;}
+  td.col-actions{white-space:nowrap;}
+  .row-actions{display:flex;gap:4px;}
+  .row-actions button{opacity:0;transition:opacity .1s;}
+  tbody tr:hover .row-actions button{opacity:1;}
+
+  .status-pill{
+    display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 7px;
+    border-radius:100px;font-size:12px;font-weight:500;white-space:nowrap;
+  }
+  .status-dot{width:7px;height:7px;border-radius:50%;flex:none;}
+
+  .empty-state{padding:56px 20px;text-align:center;color:var(--ink-soft);}
+  .empty-state h3{margin:0 0 6px;font-size:15px;color:var(--ink);font-weight:600;}
+  .empty-state p{margin:0 0 16px;font-size:13px;}
+
+  footer.footnote{
+    margin-top:14px;font-size:11.5px;color:var(--ink-faint);
+    display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  }
+
+  /* ---------- Modal ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(27,42,61,0.45);
+    display:flex;align-items:flex-start;justify-content:center;
+    padding:40px 20px;overflow:auto;z-index:100;
+    animation:fade-in .12s ease;
+  }
+  @keyframes fade-in{from{opacity:0;}to{opacity:1;}}
+  .modal{
+    background:var(--surface);border-radius:6px;box-shadow:var(--shadow-2);
+    width:100%;max-width:560px;max-height:calc(100vh - 80px);display:flex;flex-direction:column;
+  }
+  .modal.modal-wide{max-width:760px;}
+  .modal.modal-narrow{max-width:400px;}
+  .modal-head{
+    padding:16px 20px;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;flex:none;
+  }
+  .modal-head h2{margin:0;font-size:15px;font-weight:600;}
+  .modal-close{background:none;border:none;cursor:pointer;color:var(--ink-faint);padding:4px;}
+  .modal-close:hover{color:var(--ink);}
+  .modal-body{padding:18px 20px;overflow:auto;flex:1;}
+  .modal-foot{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;flex:none;}
+  .modal-foot.foot-split{justify-content:space-between;}
+
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:5px;}
+  .field-hint{font-size:11px;color:var(--ink-faint);margin-top:4px;}
+  .field input[type=text], .field input[type=date], .field textarea{
+    width:100%;padding:8px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);
+    font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--surface);
+  }
+  .field input:focus, .field textarea:focus{outline:none;border-color:var(--accent);}
+  .field-row{display:flex;gap:8px;align-items:flex-end;}
+  .field-row .field{flex:1;margin-bottom:0;}
+  .auto-field{display:flex;gap:6px;}
+  .auto-field input{font-family:var(--mono);}
+
+  .select-trigger{
+    width:100%;text-align:left;padding:8px 10px;border:1px solid var(--border-strong);
+    border-radius:var(--radius);background:var(--surface);font-family:var(--sans);font-size:13px;
+    cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--ink);
+  }
+  .select-trigger:hover{border-color:var(--ink-faint);}
+  .select-trigger.placeholder{color:var(--ink-faint);}
+  .select-trigger .chev{flex:none;opacity:.5;}
+
+  .popover{
+    position:absolute;z-index:200;background:var(--surface);border:1px solid var(--border-strong);
+    border-radius:6px;box-shadow:var(--shadow-2);width:280px;max-height:320px;display:flex;flex-direction:column;
+    animation:fade-in .1s ease;
+  }
+  .popover-search{padding:8px;border-bottom:1px solid var(--border);flex:none;}
+  .popover-search input{width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:3px;font-size:13px;font-family:var(--sans);}
+  .popover-search input:focus{outline:none;border-color:var(--accent);}
+  .popover-list{overflow:auto;padding:4px;flex:1;}
+  .popover-item{
+    padding:7px 9px;border-radius:3px;cursor:pointer;font-size:13px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .popover-item:hover{background:var(--accent-soft);}
+  .popover-item.selected{background:var(--accent-soft);font-weight:600;}
+  .popover-add{
+    padding:7px 9px;border-radius:3px;cursor:pointer;font-size:12.5px;color:var(--accent);
+    border-top:1px solid var(--border);margin-top:4px;
+  }
+  .popover-add:hover{background:var(--accent-soft);}
+  .popover-empty{padding:14px 9px;color:var(--ink-faint);font-size:12.5px;text-align:center;}
+
+  /* ---------- Columns manager ---------- */
+  .col-row{
+    display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border);
+  }
+  .col-row:last-of-type{border-bottom:none;}
+  .col-reorder{display:flex;flex-direction:column;gap:1px;flex:none;}
+  .col-reorder button{background:none;border:none;cursor:pointer;color:var(--ink-faint);padding:0;line-height:1;}
+  .col-reorder button:hover{color:var(--ink);}
+  .col-reorder button:disabled{opacity:.25;cursor:default;}
+  .col-label-input{
+    flex:1;min-width:0;padding:6px 8px;border:1px solid transparent;border-radius:3px;
+    font-family:var(--sans);font-size:13px;font-weight:500;background:transparent;
+  }
+  .col-label-input:hover{border-color:var(--border);}
+  .col-label-input:focus{outline:none;border-color:var(--accent);background:var(--surface);}
+  .col-type-badge{
+    flex:none;font-size:10.5px;font-family:var(--mono);color:var(--ink-soft);
+    background:var(--surface-2);border:1px solid var(--border);border-radius:3px;padding:3px 7px;
+  }
+  .col-dir-name{flex:none;font-size:11px;color:var(--ink-faint);font-family:var(--mono);}
+
+  .add-col-box{background:var(--surface-2);border:1px dashed var(--border-strong);border-radius:6px;padding:14px;margin-top:14px;}
+  .add-col-box h3{margin:0 0 10px;font-size:12.5px;font-weight:600;color:var(--ink-soft);}
+  .type-toggle{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+  .type-toggle button{
+    padding:6px 11px;border:1px solid var(--border-strong);border-radius:100px;background:var(--surface);
+    font-size:12px;cursor:pointer;color:var(--ink-soft);
+  }
+  .type-toggle button.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .checkbox-row{display:flex;align-items:center;gap:7px;margin-bottom:10px;}
+  .checkbox-row input{margin:0;}
+  .checkbox-row label{font-size:12.5px;color:var(--ink-soft);margin:0;font-weight:400;}
+
+  /* ---------- Directories manager ---------- */
+  .dir-tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:14px;flex-wrap:wrap;}
+  .dir-tab{
+    padding:8px 13px;font-size:12.5px;font-weight:500;color:var(--ink-soft);cursor:pointer;
+    border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;
+  }
+  .dir-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+  .dir-entry{display:flex;align-items:center;gap:8px;padding:6px 0;}
+  .dir-entry input{flex:1;min-width:0;padding:6px 8px;border:1px solid var(--border);border-radius:3px;font-size:13px;font-family:var(--sans);}
+  .dir-entry .swatch{
+    width:16px;height:16px;border-radius:50%;flex:none;cursor:pointer;border:2px solid transparent;
+  }
+  .dir-entry .swatch.active-swatch{border-color:var(--ink);}
+  .swatch-row{display:flex;gap:6px;}
+  .add-entry-row{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+  .add-entry-row input{flex:1;padding:7px 9px;border:1px solid var(--border-strong);border-radius:3px;font-size:13px;font-family:var(--sans);}
+
+  /* ---------- Confirm dialog ---------- */
+  .confirm-icon{
+    width:38px;height:38px;border-radius:50%;background:var(--brick-soft);color:var(--brick);
+    display:flex;align-items:center;justify-content:center;flex:none;margin-bottom:10px;
+  }
+  .confirm-text{font-size:13px;color:var(--ink-soft);line-height:1.55;}
+
+  /* ---------- Toast ---------- */
+  .toast{
+    position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
+    background:var(--ink);color:#fff;padding:10px 18px;border-radius:5px;font-size:13px;
+    box-shadow:var(--shadow-2);z-index:300;display:flex;align-items:center;gap:8px;
+  }
+  .toast.error{background:var(--brick);}
+
+  /* ---------- Lock screen ---------- */
+  .lock-overlay{
+    position:fixed;inset:0;background:var(--bg);
+    display:flex;align-items:center;justify-content:center;z-index:500;padding:20px;
+  }
+  .lock-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:6px;
+    box-shadow:var(--shadow-2);width:100%;max-width:360px;padding:30px 26px 26px;
+  }
+  .lock-card .brand{margin-bottom:20px;flex-direction:column;align-items:center;text-align:center;gap:8px;}
+  .lock-card .org-line{text-align:center;}
+  .lock-intro{font-size:12.5px;color:var(--ink-soft);margin:0 0 16px;text-align:center;line-height:1.5;}
+  .lock-error{color:var(--brick);font-size:12px;margin:-4px 0 10px;min-height:14px;}
+  .lock-hint{font-size:11px;color:var(--ink-faint);margin:14px 0 0;line-height:1.5;text-align:center;}
+  .lock-card input[type=password]{
+    width:100%;padding:8px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);
+    font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--surface);
+  }
+  .lock-card input[type=password]:focus{outline:none;border-color:var(--accent);}
+
+  ::-webkit-scrollbar{width:9px;height:9px;}
+  ::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:5px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+
+  @media (max-width: 640px){
+    #app{padding:14px;}
+    .topbar{flex-direction:column;gap:10px;}
+    .toolbar{flex-direction:column;align-items:stretch;}
+    .search-wrap{max-width:none;}
+    .toolbar-spacer{display:none;}
+  }
+</style>
+</head>
+<body>
+<div id="app" style="display:none;">
+
+  <div class="topbar">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+        <rect x="1" y="6" width="28" height="18" rx="1" stroke="#1B2A3D" stroke-width="1.6"/>
+        <line x1="5" y1="6" x2="5" y2="11" stroke="#1B2A3D" stroke-width="1.6"/>
+        <line x1="9" y1="6" x2="9" y2="9.5" stroke="#1B2A3D" stroke-width="1.4"/>
+        <line x1="13" y1="6" x2="13" y2="11" stroke="#1B2A3D" stroke-width="1.6"/>
+        <line x1="17" y1="6" x2="17" y2="9.5" stroke="#1B2A3D" stroke-width="1.4"/>
+        <line x1="21" y1="6" x2="21" y2="11" stroke="#1B2A3D" stroke-width="1.6"/>
+        <line x1="25" y1="6" x2="25" y2="9.5" stroke="#1B2A3D" stroke-width="1.4"/>
+      </svg>
+      <div class="brand-text">
+        <h1>Електронний журнал реєстрації заявок</h1>
+        <p class="org-line">Відділ №16 · Центр №40 · ДП «Укрметртестстандарт»</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost" id="btnDirectories">Довідники</button>
+      <button class="btn btn-ghost" id="btnColumns">Стовпці</button>
+      <button class="btn btn-ghost" id="btnChangePassword">Пароль</button>
+      <button class="btn btn-ghost" id="btnLock">Вийти</button>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="#5B6B7F" stroke-width="1.4"/><line x1="9.5" y1="9.5" x2="13" y2="13" stroke="#5B6B7F" stroke-width="1.4"/></svg>
+      <input type="text" id="searchInput" placeholder="Пошук за номером, замовником, послугою…">
+    </div>
+    <div class="toolbar-spacer"></div>
+    <span class="row-count" id="rowCount"></span>
+    <button class="btn btn-ghost" id="btnExport">Експорт</button>
+    <button class="btn btn-primary" id="btnAddRow">+ Нова заявка</button>
+  </div>
+
+  <div class="table-wrap">
+    <table id="journalTable">
+      <thead><tr id="tableHeadRow"></tr></thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div class="empty-state" id="emptyState" hidden>
+      <h3>Заявок ще немає</h3>
+      <p>Додайте першу заявку, щоб почати вести журнал.</p>
+      <button class="btn btn-primary" id="btnAddRowEmpty">+ Нова заявка</button>
+    </div>
+  </div>
+
+  <footer class="footnote">
+    <span>Журнал спільний: дані бачать усі, хто відкриває цей документ, і зміни зберігаються одразу для всіх.</span>
+  </footer>
+
+</div>
+
+<div id="modalLayer"></div>
+<div id="lockLayer"></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ЗАМІНІТЬ рядок нижче на URL вашого розгорнутого Apps Script Web App
+  // (у Google Таблиці: Розширення → Apps Script → Розгорнути → Веб-застосунок)
+  var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0_gYeIwj0tdMs88YzwtemhPqoz3QLB2IT4Hggyu28snChE69i2ghlVYWYFjFHmVwc/exec";
+  // Той самий ключ, що й ACCESS_KEY у Code.gs. Придумайте довгий випадковий
+  // рядок (наприклад, згенерований пароль) і вставте однаково в обидва місця.
+  var ACCESS_KEY = "C3sRLYioLy8JDcVfG2BgFXEwANoIIygq";
+  var state = null;
+  var filters = { q: "", dateRanges: {}, textFilters: {}, statusFilters: {}, selectFilters: {} };
+  var openPopover = null; // currently open popover element + cleanup
+
+  /* ============ helpers ============ */
+  function uid(prefix){ return (prefix||"id") + "_" + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+  function pad4(n){ return String(n).padStart(4,"0"); }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
+  function todayISO(){ var d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  function fmtDate(iso){
+    if(!iso) return "";
+    var p = iso.split("-");
+    if(p.length!==3) return iso;
+    return p[2]+"."+p[1]+"."+p[0];
+  }
+  var SWATCHES = ["#2C5F8A","#3E8E8A","#B98A2E","#3E7A44","#B4483A","#7A5C9E","#5B6B7F","#B0733E"];
+
+  function defaultState(){
+    return {
+      columns: [
+        {id:"appNum", label:"№ заявки", type:"text", auto:true, autoPrefix:"№16-"},
+        {id:"certNum", label:"№ сертифіката", type:"text"},
+        {id:"date", label:"Дата", type:"date"},
+        {id:"docNum", label:"№ рахунку / акту / договору", type:"text", auto:true, autoPrefix:""},
+        {id:"customer", label:"ПІП Замовника (назва організації)", type:"select", directory:"customers"},
+        {id:"service", label:"Назва послуги", type:"select", directory:"services"},
+        {id:"status", label:"Статус виконання", type:"status", directory:"statuses"},
+        {id:"note", label:"Примітка", type:"text"}
+      ],
+      directoryLabels: { customers:"Замовники", services:"Послуги", statuses:"Статуси" },
+      directories: {
+        customers: [],
+        services: ["Повірка засобів вимірювальної техніки","Калібрування засобів вимірювальної техніки","Сертифікація продукції","Атестація методик вимірювань"],
+        statuses: [
+          {label:"Нова заявка", color:"#8A93A3"},
+          {label:"В обробці", color:"#2C5F8A"},
+          {label:"Виконується", color:"#B98A2E"},
+          {label:"Готово до видачі", color:"#3E8E8A"},
+          {label:"Завершено", color:"#3E7A44"},
+          {label:"Скасовано", color:"#B4483A"}
+        ]
+      },
+      counters: { appNum:0, docNum:0 },
+      rows: [],
+      settings: { password: null }
+    };
+  }
+
+  /* ============ storage (Google Apps Script backend) ============ */
+  function isConfigured(){
+    return APPS_SCRIPT_URL && APPS_SCRIPT_URL.indexOf("СЮДИ_ВСТАВТЕ") === -1 &&
+           ACCESS_KEY && ACCESS_KEY.indexOf("СЮДИ_ВСТАВТЕ") === -1;
+  }
+
+  function withKey_(url){
+    var sep = url.indexOf("?") === -1 ? "?" : "&";
+    return url + sep + "key=" + encodeURIComponent(ACCESS_KEY);
+  }
+
+  // Не ковтає помилки: якщо бекенд недоступний або ключ невірний, кидає
+  // виняток і виклик init() показує відповідний екран замість того, щоб
+  // мовчки затерти дані на сервері порожнім журналом.
+  async function loadState(){
+    var res = await fetch(withKey_(APPS_SCRIPT_URL) + "&t=" + Date.now(), { method: "GET" });
+    if(!res.ok) throw new Error("http " + res.status);
+    var text = await res.text();
+    if(text === "UNAUTHORIZED"){
+      var authErr = new Error("unauthorized");
+      authErr.isAuthError = true;
+      throw authErr;
+    }
+    if(text && text.trim()){
+      var parsed = JSON.parse(text);
+      if(!parsed.directoryLabels) parsed.directoryLabels = {customers:"Замовники", services:"Послуги", statuses:"Статуси"};
+      if(!parsed.settings) parsed.settings = { password: null };
+      return parsed;
+    }
+    // Аркуш справді порожній — це перший запуск, можна безпечно засіяти дефолт.
+    var def = defaultState();
+    await persist(def, true);
+    return def;
+  }
+
+  var persistTimer = null;
+  function persist(s, immediate){
+    if(persistTimer) clearTimeout(persistTimer);
+    var doSave = async function(){
+      try{
+        var res = await fetch(withKey_(APPS_SCRIPT_URL), {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(s)
+        });
+        if(!res.ok) throw new Error("http " + res.status);
+        var data = null;
+        try{ data = await res.json(); }catch(parseErr){ data = null; }
+        if(!data || data.ok !== true){
+          showToast(data && data.error === "unauthorized" ? "Невірний ключ доступу — зміни НЕ збережено" : "Не вдалося зберегти зміни","error");
+        }
+      }catch(e){
+        showToast("Не вдалося зберегти зміни. Перевірте підключення до інтернету.","error");
+      }
+    };
+    if(immediate) return doSave();
+    persistTimer = setTimeout(doSave, 150);
+  }
+
+  /* ============ toast ============ */
+  var toastTimer = null;
+  function showToast(msg, kind){
+    var el = document.getElementById("toast");
+    el.textContent = msg;
+    el.className = "toast" + (kind==="error" ? " error" : "");
+    el.hidden = false;
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ el.hidden = true; }, 2800);
+  }
+
+  /* ============ render: table ============ */
+  function directoryLabel(key){
+    return (state.directoryLabels && state.directoryLabels[key]) || key;
+  }
+
+  function statusOf(label){
+    var list = state.directories.statuses || [];
+    for(var i=0;i<list.length;i++) if(list[i].label===label) return list[i];
+    return null;
+  }
+
+  function renderHead(){
+    var tr = document.getElementById("tableHeadRow");
+    var html = "<th>№ п/п</th>";
+    state.columns.forEach(function(c){
+      var active;
+      if(c.type === "date"){
+        active = !!(filters.dateRanges[c.id] && (filters.dateRanges[c.id].from || filters.dateRanges[c.id].to));
+      } else if(c.type === "status"){
+        active = !!filters.statusFilters[c.id];
+      } else if(c.type === "select"){
+        active = !!filters.selectFilters[c.id];
+      } else {
+        active = !!filters.textFilters[c.id];
+      }
+      html += "<th><button type=\"button\" class=\"th-filter-btn\" data-filter-col=\""+c.id+"\" data-filter-type=\""+c.type+"\">"+esc(c.label)+iconFilter()+(active?"<span class=\"th-filter-dot\"></span>":"")+"</button></th>";
+    });
+    html += "<th class=\"col-actions\">Дії</th>";
+    tr.innerHTML = html;
+    tr.querySelectorAll("[data-filter-col]").forEach(function(btn){
+      btn.addEventListener("click", function(e){
+        e.stopPropagation();
+        var colId = btn.getAttribute("data-filter-col");
+        var type = btn.getAttribute("data-filter-type");
+        if(type === "date") openDateFilterPopover(btn, colId);
+        else if(type === "status") openStatusFilterPopover(btn, colId);
+        else if(type === "select") openSelectFilterPopover(btn, colId);
+        else openTextFilterPopover(btn, colId);
+      });
+    });
+  }
+
+  function openDateFilterPopover(anchorEl, colId){
+    closePopover();
+    var rect = anchorEl.getBoundingClientRect();
+    var pop = document.createElement("div");
+    pop.className = "popover";
+    pop.style.top = (window.scrollY + rect.bottom + 4) + "px";
+    pop.style.left = (window.scrollX + rect.left) + "px";
+    pop.style.width = "250px";
+    pop.style.color = "var(--ink)";
+
+    var current = filters.dateRanges[colId] || {};
+    var mode = (current.from && current.from === current.to) ? "exact" : (current.from || current.to) ? "range" : "exact";
+
+    pop.innerHTML =
+      "<div style=\"padding:10px;\">"+
+        "<div class=\"type-toggle\" style=\"margin-bottom:10px;\">"+
+          "<button type=\"button\" data-mode=\"exact\" class=\""+(mode==="exact"?"active":"")+"\">Конкретна дата</button>"+
+          "<button type=\"button\" data-mode=\"range\" class=\""+(mode==="range"?"active":"")+"\">Період</button>"+
+        "</div>"+
+        "<div id=\"dfExactWrap\" style=\""+(mode==="exact"?"":"display:none;")+"\">"+
+          "<div class=\"field\" style=\"margin-bottom:8px;\"><input type=\"date\" id=\"dfExact\" value=\""+esc(mode==="exact"?(current.from||""):"")+"\"></div>"+
+        "</div>"+
+        "<div id=\"dfRangeWrap\" style=\""+(mode==="range"?"":"display:none;")+"\">"+
+          "<div class=\"field\" style=\"margin-bottom:8px;\"><label style=\"font-weight:400;\">З</label><input type=\"date\" id=\"dfFrom\" value=\""+esc(mode==="range"?(current.from||""):"")+"\"></div>"+
+          "<div class=\"field\" style=\"margin-bottom:8px;\"><label style=\"font-weight:400;\">По</label><input type=\"date\" id=\"dfTo\" value=\""+esc(mode==="range"?(current.to||""):"")+"\"></div>"+
+        "</div>"+
+        "<div style=\"display:flex;gap:8px;\">"+
+          "<button type=\"button\" class=\"btn btn-ghost btn-sm\" id=\"dfClear\" style=\"flex:1;justify-content:center;\">Скинути</button>"+
+          "<button type=\"button\" class=\"btn btn-primary btn-sm\" id=\"dfApply\" style=\"flex:1;justify-content:center;\">Застосувати</button>"+
+        "</div>"+
+      "</div>";
+
+    document.body.appendChild(pop);
+
+    var modeSel = mode;
+    pop.querySelectorAll("[data-mode]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        modeSel = btn.getAttribute("data-mode");
+        pop.querySelectorAll("[data-mode]").forEach(function(b){ b.classList.toggle("active", b===btn); });
+        pop.querySelector("#dfExactWrap").style.display = modeSel === "exact" ? "" : "none";
+        pop.querySelector("#dfRangeWrap").style.display = modeSel === "range" ? "" : "none";
+      });
+    });
+
+    pop.querySelector("#dfClear").addEventListener("click", function(){
+      delete filters.dateRanges[colId];
+      closePopover();
+      renderAll();
+    });
+    pop.querySelector("#dfApply").addEventListener("click", function(){
+      if(modeSel === "exact"){
+        var d = pop.querySelector("#dfExact").value;
+        if(d) filters.dateRanges[colId] = { from: d, to: d }; else delete filters.dateRanges[colId];
+      } else {
+        var from = pop.querySelector("#dfFrom").value;
+        var to = pop.querySelector("#dfTo").value;
+        if(from || to) filters.dateRanges[colId] = { from: from || null, to: to || null }; else delete filters.dateRanges[colId];
+      }
+      closePopover();
+      renderAll();
+    });
+
+    function outsideClick(e){
+      if(!pop.contains(e.target) && e.target !== anchorEl && !anchorEl.contains(e.target)){
+        closePopover();
+      }
+    }
+    setTimeout(function(){ document.addEventListener("mousedown", outsideClick); }, 0);
+    openPopover = { el: pop, cleanup: function(){ document.removeEventListener("mousedown", outsideClick); } };
+  }
+
+  function openTextFilterPopover(anchorEl, colId){
+    closePopover();
+    var rect = anchorEl.getBoundingClientRect();
+    var pop = document.createElement("div");
+    pop.className = "popover";
+    pop.style.top = (window.scrollY + rect.bottom + 4) + "px";
+    pop.style.left = (window.scrollX + rect.left) + "px";
+    pop.style.width = "230px";
+    pop.style.color = "var(--ink)";
+
+    var current = filters.textFilters[colId] || "";
+    pop.innerHTML =
+      "<div style=\"padding:10px;\">"+
+        "<div class=\"field\" style=\"margin-bottom:8px;\"><input type=\"text\" id=\"tfInput\" placeholder=\"Текст для фільтрації…\" value=\""+esc(current)+"\"></div>"+
+        "<div style=\"display:flex;gap:8px;\">"+
+          "<button type=\"button\" class=\"btn btn-ghost btn-sm\" id=\"tfClear\" style=\"flex:1;justify-content:center;\">Скинути</button>"+
+          "<button type=\"button\" class=\"btn btn-primary btn-sm\" id=\"tfApply\" style=\"flex:1;justify-content:center;\">Застосувати</button>"+
+        "</div>"+
+      "</div>";
+
+    document.body.appendChild(pop);
+    var input = pop.querySelector("#tfInput");
+    input.focus();
+    input.select();
+
+    function apply(){
+      var v = input.value.trim();
+      if(v) filters.textFilters[colId] = v; else delete filters.textFilters[colId];
+      closePopover();
+      renderAll();
+    }
+    input.addEventListener("keydown", function(e){ if(e.key === "Enter") apply(); });
+    pop.querySelector("#tfApply").addEventListener("click", apply);
+    pop.querySelector("#tfClear").addEventListener("click", function(){
+      delete filters.textFilters[colId];
+      closePopover();
+      renderAll();
+    });
+
+    function outsideClick(e){
+      if(!pop.contains(e.target) && e.target !== anchorEl && !anchorEl.contains(e.target)){
+        closePopover();
+      }
+    }
+    setTimeout(function(){ document.addEventListener("mousedown", outsideClick); }, 0);
+    openPopover = { el: pop, cleanup: function(){ document.removeEventListener("mousedown", outsideClick); } };
+  }
+
+  function openStatusFilterPopover(anchorEl, colId){
+    closePopover();
+    var rect = anchorEl.getBoundingClientRect();
+    var pop = document.createElement("div");
+    pop.className = "popover";
+    pop.style.top = (window.scrollY + rect.bottom + 4) + "px";
+    pop.style.left = (window.scrollX + rect.left) + "px";
+    pop.style.width = "230px";
+    pop.style.color = "var(--ink)";
+
+    var current = filters.statusFilters[colId] || "";
+    var list = state.directories.statuses || [];
+    var listHtml = "<div class=\"popover-item"+(current===""?" selected":"")+"\" data-status-val=\"\">Усі статуси</div>";
+    list.forEach(function(s){
+      var sel = s.label === current ? " selected" : "";
+      listHtml += "<div class=\"popover-item"+sel+"\" data-status-val=\""+esc(s.label)+"\"><span class=\"status-dot\" style=\"background:"+s.color+"\"></span><span>"+esc(s.label)+"</span></div>";
+    });
+
+    pop.innerHTML = "<div class=\"popover-list\" style=\"max-height:280px;\">"+listHtml+"</div>";
+    document.body.appendChild(pop);
+
+    pop.querySelectorAll("[data-status-val]").forEach(function(item){
+      item.addEventListener("click", function(){
+        var val = item.getAttribute("data-status-val");
+        if(val) filters.statusFilters[colId] = val; else delete filters.statusFilters[colId];
+        closePopover();
+        renderAll();
+      });
+    });
+
+    function outsideClick(e){
+      if(!pop.contains(e.target) && e.target !== anchorEl && !anchorEl.contains(e.target)){
+        closePopover();
+      }
+    }
+    setTimeout(function(){ document.addEventListener("mousedown", outsideClick); }, 0);
+    openPopover = { el: pop, cleanup: function(){ document.removeEventListener("mousedown", outsideClick); } };
+  }
+
+  function openSelectFilterPopover(anchorEl, colId){
+    closePopover();
+    var col = state.columns.find(function(c){ return c.id === colId; });
+    var rect = anchorEl.getBoundingClientRect();
+    var pop = document.createElement("div");
+    pop.className = "popover";
+    pop.style.top = (window.scrollY + rect.bottom + 4) + "px";
+    pop.style.left = (window.scrollX + rect.left) + "px";
+    pop.style.width = "250px";
+    pop.style.color = "var(--ink)";
+
+    var current = filters.selectFilters[colId] || "";
+    var list = (col && state.directories[col.directory]) || [];
+    var opts = "<div class=\"popover-item"+(current===""?" selected":"")+"\" data-select-val=\"\">Усі значення</div>";
+    list.forEach(function(v){
+      var sel = v === current ? " selected" : "";
+      opts += "<div class=\"popover-item"+sel+"\" data-select-val=\""+esc(v)+"\">"+esc(v)+"</div>";
+    });
+    if(list.length === 0){
+      opts += "<div class=\"popover-empty\">Довідник порожній</div>";
+    }
+
+    pop.innerHTML =
+      "<div class=\"popover-search\"><input type=\"text\" placeholder=\"Пошук у списку…\" id=\"sfSearch\"></div>"+
+      "<div class=\"popover-list\" style=\"max-height:260px;\">"+opts+"</div>";
+    document.body.appendChild(pop);
+
+    function wireItems(){
+      pop.querySelectorAll("[data-select-val]").forEach(function(item){
+        item.addEventListener("click", function(){
+          var val = item.getAttribute("data-select-val");
+          if(val) filters.selectFilters[colId] = val; else delete filters.selectFilters[colId];
+          closePopover();
+          renderAll();
+        });
+      });
+    }
+    wireItems();
+
+    var searchInput = pop.querySelector("#sfSearch");
+    searchInput.focus();
+    searchInput.addEventListener("input", function(){
+      var q = searchInput.value.trim().toLowerCase();
+      var listEl = pop.querySelector(".popover-list");
+      var itemsHtml = "<div class=\"popover-item"+(current===""?" selected":"")+"\" data-select-val=\"\">Усі значення</div>";
+      var filtered = list.filter(function(v){ return !q || v.toLowerCase().indexOf(q) !== -1; });
+      if(filtered.length === 0){
+        itemsHtml += "<div class=\"popover-empty\">Нічого не знайдено</div>";
+      } else {
+        filtered.forEach(function(v){
+          var sel = v === current ? " selected" : "";
+          itemsHtml += "<div class=\"popover-item"+sel+"\" data-select-val=\""+esc(v)+"\">"+esc(v)+"</div>";
+        });
+      }
+      listEl.innerHTML = itemsHtml;
+      wireItems();
+    });
+
+    function outsideClick(e){
+      if(!pop.contains(e.target) && e.target !== anchorEl && !anchorEl.contains(e.target)){
+        closePopover();
+      }
+    }
+    setTimeout(function(){ document.addEventListener("mousedown", outsideClick); }, 0);
+    openPopover = { el: pop, cleanup: function(){ document.removeEventListener("mousedown", outsideClick); } };
+  }
+
+  function matchesFilters(row){
+    var selectOk = Object.keys(filters.selectFilters).every(function(colId){
+      return row.values[colId] === filters.selectFilters[colId];
+    });
+    if(!selectOk) return false;
+    var statusOk = Object.keys(filters.statusFilters).every(function(colId){
+      return row.values[colId] === filters.statusFilters[colId];
+    });
+    if(!statusOk) return false;
+    var dateOk = Object.keys(filters.dateRanges).every(function(colId){
+      var range = filters.dateRanges[colId];
+      var v = row.values[colId];
+      if(!v) return false;
+      if(range.from && v < range.from) return false;
+      if(range.to && v > range.to) return false;
+      return true;
+    });
+    if(!dateOk) return false;
+    var textOk = Object.keys(filters.textFilters).every(function(colId){
+      var needle = filters.textFilters[colId];
+      if(!needle) return true;
+      var v = row.values[colId];
+      return v && String(v).toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+    });
+    if(!textOk) return false;
+    if(filters.q){
+      var q = filters.q.toLowerCase();
+      var found = state.columns.some(function(c){
+        var v = row.values[c.id];
+        return v && String(v).toLowerCase().indexOf(q) !== -1;
+      });
+      if(!found) return false;
+    }
+    return true;
+  }
+
+  function renderRows(){
+    var tbody = document.getElementById("tableBody");
+    var empty = document.getElementById("emptyState");
+    var visible = state.rows.filter(matchesFilters);
+
+    if(state.rows.length === 0){
+      tbody.innerHTML = "";
+      empty.hidden = false;
+      document.getElementById("journalTable").style.display = "none";
+    } else {
+      document.getElementById("journalTable").style.display = "";
+      empty.hidden = true;
+      var html = "";
+      visible.forEach(function(row, idx){
+        html += "<tr data-row-id=\""+row.id+"\">";
+        html += "<td>"+(idx+1)+"</td>";
+        state.columns.forEach(function(c){
+          var v = row.values[c.id];
+          if(c.type === "status"){
+            var st = statusOf(v);
+            if(st){
+              html += "<td><span class=\"status-pill\" style=\"background:"+st.color+"22;color:"+st.color+"\"><span class=\"status-dot\" style=\"background:"+st.color+"\"></span>"+esc(st.label)+"</span></td>";
+            } else {
+              html += "<td class=\"cell-empty\">—</td>";
+            }
+          } else if(c.type === "date"){
+            html += "<td class=\"cell-mono\">"+(v ? esc(fmtDate(v)) : "<span class=\"cell-empty\">—</span>")+"</td>";
+          } else if(c.auto){
+            html += "<td class=\"cell-mono\">"+(v ? esc(v) : "<span class=\"cell-empty\">—</span>")+"</td>";
+          } else {
+            html += "<td>"+(v ? esc(v) : "<span class=\"cell-empty\">—</span>")+"</td>";
+          }
+        });
+        html += "<td class=\"col-actions\"><div class=\"row-actions\">"+
+          "<button class=\"btn btn-icon btn-ghost btn-sm row-edit\" title=\"Редагувати\">"+iconEdit()+"</button>"+
+          "<button class=\"btn btn-icon btn-ghost btn-sm row-delete\" title=\"Видалити\">"+iconTrash()+"</button>"+
+          "</div></td>";
+        html += "</tr>";
+      });
+      if(visible.length === 0){
+        html = "<tr><td colspan=\""+(state.columns.length+2)+"\" style=\"text-align:center;color:var(--ink-faint);padding:28px;\">Немає заявок за заданим фільтром</td></tr>";
+      }
+      tbody.innerHTML = html;
+    }
+
+    document.getElementById("rowCount").textContent = visible.length + " з " + state.rows.length + (state.rows.length===1 ? " заявки" : " заявок");
+
+    tbody.querySelectorAll("tr[data-row-id]").forEach(function(tr){
+      tr.addEventListener("click", function(e){
+        if(e.target.closest(".row-actions")) return;
+        openRequestModal(tr.getAttribute("data-row-id"));
+      });
+    });
+    tbody.querySelectorAll(".row-edit").forEach(function(btn){
+      btn.addEventListener("click", function(e){
+        e.stopPropagation();
+        openRequestModal(btn.closest("tr").getAttribute("data-row-id"));
+      });
+    });
+    tbody.querySelectorAll(".row-delete").forEach(function(btn){
+      btn.addEventListener("click", function(e){
+        e.stopPropagation();
+        var id = btn.closest("tr").getAttribute("data-row-id");
+        confirmDialog({
+          title:"Видалити заявку?",
+          text:"Цю дію не можна скасувати. Запис буде остаточно видалено з журналу.",
+          confirmLabel:"Видалити"
+        }).then(function(ok){
+          if(!ok) return;
+          state.rows = state.rows.filter(function(r){ return r.id !== id; });
+          persist(state);
+          renderRows();
+          showToast("Заявку видалено");
+        });
+      });
+    });
+  }
+
+  function renderAll(){
+    renderHead();
+    renderRows();
+  }
+
+  /* ============ icons ============ */
+  function iconEdit(){ return '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 1.5l3 3L4 13H1v-3L9.5 1.5z" stroke="#5B6B7F" stroke-width="1.3" stroke-linejoin="round"/></svg>'; }
+  function iconTrash(){ return '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M5.5 3.5V2h3v1.5M3.5 3.5l.6 8.5a1 1 0 001 .9h4.8a1 1 0 001-.9l.6-8.5" stroke="#B4483A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>'; }
+  function iconChevDown(){ return '<svg class="chev" width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2.5 4l3 3 3-3" stroke="#5B6B7F" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'; }
+  function iconFilter(){ return '<svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M1.5 2h9L7 6.2V10l-2-1V6.2L1.5 2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>'; }
+  function iconX(){ return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>'; }
+  function iconWarn(){ return '<svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 6v4M9 12.2v.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="9" cy="9" r="7.3" stroke="currentColor" stroke-width="1.4"/></svg>'; }
+  function iconRuler(){ return '<svg width="30" height="30" viewBox="0 0 30 30" fill="none"><rect x="1" y="6" width="28" height="18" rx="1" stroke="#1B2A3D" stroke-width="1.6"/><line x1="5" y1="6" x2="5" y2="11" stroke="#1B2A3D" stroke-width="1.6"/><line x1="9" y1="6" x2="9" y2="9.5" stroke="#1B2A3D" stroke-width="1.4"/><line x1="13" y1="6" x2="13" y2="11" stroke="#1B2A3D" stroke-width="1.6"/><line x1="17" y1="6" x2="17" y2="9.5" stroke="#1B2A3D" stroke-width="1.4"/><line x1="21" y1="6" x2="21" y2="11" stroke="#1B2A3D" stroke-width="1.6"/><line x1="25" y1="6" x2="25" y2="9.5" stroke="#1B2A3D" stroke-width="1.4"/></svg>'; }
+  function iconLock(){ return '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.4"/><path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.4"/></svg>'; }
+  function lockBrandHtml(){
+    return "<div class=\"brand\">"+iconRuler()+"<div class=\"brand-text\"><h1>Електронний журнал заявок</h1><p class=\"org-line\">Відділ №16 · Центр №40 · ДП «Укрметртестстандарт»</p></div></div>";
+  }
+
+  /* ============ modal shell ============ */
+  function closeModal(){
+    closePopover();
+    var layer = document.getElementById("modalLayer");
+    layer.innerHTML = "";
+  }
+  function openModalShell(innerHtml, opts){
+    closePopover();
+    var layer = document.getElementById("modalLayer");
+    var wide = opts && opts.wide ? " modal-wide" : "";
+    var narrow = opts && opts.narrow ? " modal-narrow" : "";
+    layer.innerHTML =
+      "<div class=\"modal-overlay\" id=\"overlay\">"+
+        "<div class=\"modal"+wide+narrow+"\">"+innerHtml+"</div>"+
+      "</div>";
+    document.getElementById("overlay").addEventListener("mousedown", function(e){
+      if(e.target.id === "overlay") closeModal();
+    });
+    document.addEventListener("keydown", escHandler);
+  }
+  function escHandler(e){
+    if(e.key === "Escape"){
+      if(openPopover){ closePopover(); }
+      else { closeModal(); document.removeEventListener("keydown", escHandler); }
+    }
+  }
+
+  /* ============ confirm dialog ============ */
+  function confirmDialog(opts){
+    return new Promise(function(resolve){
+      var html =
+        "<div class=\"modal-body\" style=\"padding-top:22px;\">"+
+          "<div class=\"confirm-icon\">"+iconWarn()+"</div>"+
+          "<h2 style=\"margin:0 0 8px;font-size:15px;font-weight:600;\">"+esc(opts.title)+"</h2>"+
+          "<p class=\"confirm-text\">"+esc(opts.text)+"</p>"+
+        "</div>"+
+        "<div class=\"modal-foot\">"+
+          "<button class=\"btn btn-ghost\" id=\"cfCancel\">Скасувати</button>"+
+          "<button class=\"btn btn-danger\" id=\"cfOk\">"+esc(opts.confirmLabel||"Так, продовжити")+"</button>"+
+        "</div>";
+      openModalShell(html, {narrow:true});
+      document.getElementById("cfCancel").addEventListener("click", function(){ closeModal(); resolve(false); });
+      document.getElementById("cfOk").addEventListener("click", function(){ closeModal(); resolve(true); });
+    });
+  }
+
+  /* ============ popover (searchable list picker) ============ */
+  function closePopover(){
+    if(openPopover && openPopover.el && openPopover.el.parentNode){
+      openPopover.el.parentNode.removeChild(openPopover.el);
+    }
+    if(openPopover && openPopover.cleanup) openPopover.cleanup();
+    openPopover = null;
+  }
+
+  // Прив'язує до текстового поля живі підказки з довідника: показуються
+  // одразу при фокусі й фільтруються по мірі введення тексту.
+  function attachComboBox(inputEl, dirKey, colId, draft){
+    function showList(){
+      closePopover();
+      var query = inputEl.value.trim();
+      var items = state.directories[dirKey] || [];
+      var filtered = query ? items.filter(function(v){ return v.toLowerCase().indexOf(query.toLowerCase()) !== -1; }) : items;
+      var rect = inputEl.getBoundingClientRect();
+      var pop = document.createElement("div");
+      pop.className = "popover";
+      pop.style.top = (window.scrollY + rect.bottom + 4) + "px";
+      pop.style.left = (window.scrollX + rect.left) + "px";
+      pop.style.width = Math.max(rect.width, 220) + "px";
+      pop.style.color = "var(--ink)";
+
+      var listHtml;
+      if(filtered.length === 0){
+        listHtml = "<div class=\"popover-empty\">"+(items.length===0?"Довідник порожній":"Нічого не знайдено")+"</div>";
+      } else {
+        listHtml = filtered.map(function(v){
+          return "<div class=\"popover-item\" data-pick=\""+esc(v)+"\">"+esc(v)+"</div>";
+        }).join("");
+      }
+      var addHtml = "";
+      if(query && !items.some(function(v){ return v.toLowerCase() === query.toLowerCase(); })){
+        addHtml = "<div class=\"popover-add\" data-add=\"1\">+ Додати «"+esc(query)+"»</div>";
+      }
+      pop.innerHTML = "<div class=\"popover-list\">"+listHtml+"</div>"+addHtml;
+      document.body.appendChild(pop);
+
+      pop.querySelectorAll("[data-pick]").forEach(function(item){
+        // mousedown (not click) so this fires before the input's blur closes the popover
+        item.addEventListener("mousedown", function(e){
+          e.preventDefault();
+          var v = item.getAttribute("data-pick");
+          inputEl.value = v;
+          draft[colId] = v;
+          closePopover();
+        });
+      });
+      var addEl = pop.querySelector("[data-add]");
+      if(addEl){
+        addEl.addEventListener("mousedown", function(e){
+          e.preventDefault();
+          if(!state.directories[dirKey]) state.directories[dirKey] = [];
+          state.directories[dirKey].push(query);
+          persist(state);
+          inputEl.value = query;
+          draft[colId] = query;
+          closePopover();
+        });
+      }
+
+      function outsideClick(e){
+        if(!pop.contains(e.target) && e.target !== inputEl){
+          closePopover();
+        }
+      }
+      setTimeout(function(){ document.addEventListener("mousedown", outsideClick); }, 0);
+      openPopover = { el: pop, cleanup: function(){ document.removeEventListener("mousedown", outsideClick); } };
+    }
+
+    inputEl.addEventListener("focus", showList);
+    inputEl.addEventListener("input", function(){
+      draft[colId] = inputEl.value;
+      showList();
+    });
+  }
+
+  function openOptionPopover(anchorEl, config){
+    // config: {items:[{key,label,color?}], selectedKey, onSelect(key), onAdd(text) -> key|null, placeholder}
+    closePopover();
+    var rect = anchorEl.getBoundingClientRect();
+    var pop = document.createElement("div");
+    pop.className = "popover";
+    pop.style.top = (window.scrollY + rect.bottom + 4) + "px";
+    pop.style.left = (window.scrollX + rect.left) + "px";
+    pop.style.width = Math.max(rect.width, 240) + "px";
+
+    var query = "";
+    function renderList(){
+      var filtered = config.items.filter(function(it){
+        return !query || it.label.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+      });
+      var listHtml = "";
+      if(filtered.length === 0){
+        listHtml = "<div class=\"popover-empty\">Нічого не знайдено</div>";
+      } else {
+        filtered.forEach(function(it){
+          var sel = it.key === config.selectedKey ? " selected" : "";
+          var dot = it.color ? "<span class=\"status-dot\" style=\"background:"+it.color+"\"></span>" : "";
+          listHtml += "<div class=\"popover-item"+sel+"\" data-key=\""+esc(it.key)+"\">"+dot+"<span>"+esc(it.label)+"</span></div>";
+        });
+      }
+      var listEl = pop.querySelector(".popover-list");
+      listEl.innerHTML = listHtml;
+      listEl.querySelectorAll(".popover-item").forEach(function(row){
+        row.addEventListener("click", function(){
+          config.onSelect(row.getAttribute("data-key"));
+          closePopover();
+        });
+      });
+      var addEl = pop.querySelector(".popover-add");
+      if(addEl){
+        if(config.onAdd && query && !config.items.some(function(it){ return it.label.toLowerCase()===query.toLowerCase(); })){
+          addEl.style.display = "";
+          addEl.textContent = "+ Додати «"+query+"»";
+        } else {
+          addEl.style.display = "none";
+        }
+      }
+    }
+
+    var addRowHtml = config.onAdd ? "<div class=\"popover-add\"></div>" : "";
+    pop.innerHTML =
+      "<div class=\"popover-search\"><input type=\"text\" placeholder=\""+(config.placeholder||"Пошук…")+"\" id=\"popSearch\"></div>"+
+      "<div class=\"popover-list\"></div>"+addRowHtml;
+
+    document.body.appendChild(pop);
+    renderList();
+
+    var searchInput = pop.querySelector("#popSearch");
+    searchInput.focus();
+    searchInput.addEventListener("input", function(){
+      query = searchInput.value.trim();
+      renderList();
+    });
+    var addEl = pop.querySelector(".popover-add");
+    if(addEl){
+      addEl.addEventListener("click", function(){
+        if(!query) return;
+        var key = config.onAdd(query);
+        if(key){ config.onSelect(key); }
+        closePopover();
+      });
+    }
+
+    function outsideClick(e){
+      if(!pop.contains(e.target) && e.target !== anchorEl){
+        closePopover();
+      }
+    }
+    setTimeout(function(){ document.addEventListener("mousedown", outsideClick); }, 0);
+
+    openPopover = { el: pop, cleanup: function(){ document.removeEventListener("mousedown", outsideClick); } };
+  }
+
+  /* ============ request modal (add/edit row) ============ */
+  function generateAutoValue(col, counterValue){
+    var year = new Date().getFullYear();
+    return (col.autoPrefix||"") + pad4(counterValue) + "/" + year;
+  }
+
+  function openRequestModal(rowId){
+    var editing = !!rowId;
+    var row = editing ? state.rows.find(function(r){ return r.id === rowId; }) : { id: uid("row"), values: {} };
+    var draft = Object.assign({}, row.values);
+
+    // prefill defaults for a new row
+    if(!editing){
+      state.columns.forEach(function(c){
+        if(c.type === "date" && !draft[c.id]) draft[c.id] = todayISO();
+        if(c.auto && !draft[c.id]) draft[c.id] = generateAutoValue(c, (state.counters[c.id]||0) + 1);
+        if(c.type === "status" && !draft[c.id] && (state.directories.statuses||[]).length){
+          draft[c.id] = state.directories.statuses[0].label;
+        }
+      });
+    }
+
+    var fieldsHtml = state.columns.map(function(c){
+      var val = draft[c.id] || "";
+      if(c.type === "date"){
+        return "<div class=\"field\"><label>"+esc(c.label)+"</label><input type=\"date\" data-field=\""+c.id+"\" value=\""+esc(val)+"\"></div>";
+      }
+      if(c.auto){
+        return "<div class=\"field\"><label>"+esc(c.label)+"</label>"+
+          "<div class=\"auto-field\">"+
+            "<input type=\"text\" data-field=\""+c.id+"\" value=\""+esc(val)+"\">"+
+            "<button type=\"button\" class=\"btn btn-ghost btn-sm\" data-auto-regen=\""+c.id+"\">Авто</button>"+
+          "</div>"+
+          "<div class=\"field-hint\">Генерується автоматично; можна ввести вручну.</div>"+
+        "</div>";
+      }
+      if(c.type === "select"){
+        return "<div class=\"field\"><label>"+esc(c.label)+"</label>"+
+          "<input type=\"text\" class=\"ac-input\" data-select-field=\""+c.id+"\" data-dir=\""+esc(c.directory)+"\" value=\""+esc(val)+"\" autocomplete=\"off\" placeholder=\"Почніть вводити…\">"+
+        "</div>";
+      }
+      if(c.type === "status"){
+        var st = statusOf(val);
+        return "<div class=\"field\"><label>"+esc(c.label)+"</label>"+
+          "<button type=\"button\" class=\"select-trigger\" data-status-field=\""+c.id+"\">"+
+            (st ? "<span class=\"status-pill\" style=\"background:"+st.color+"22;color:"+st.color+"\"><span class=\"status-dot\" style=\"background:"+st.color+"\"></span>"+esc(st.label)+"</span>" : "<span>Оберіть статус…</span>")+
+            iconChevDown()+
+          "</button></div>";
+      }
+      // plain text
+      return "<div class=\"field\"><label>"+esc(c.label)+"</label><input type=\"text\" data-field=\""+c.id+"\" value=\""+esc(val)+"\"></div>";
+    }).join("");
+
+    var html =
+      "<div class=\"modal-head\"><h2>"+(editing?"Редагування заявки":"Нова заявка")+"</h2>"+
+        "<button class=\"modal-close\" id=\"mClose\">"+iconX()+"</button></div>"+
+      "<div class=\"modal-body\">"+fieldsHtml+"</div>"+
+      "<div class=\"modal-foot foot-split\">"+
+        (editing ? "<button class=\"btn btn-danger-outline\" id=\"mDelete\">Видалити заявку</button>" : "<span></span>")+
+        "<div style=\"display:flex;gap:8px;\">"+
+          "<button class=\"btn btn-ghost\" id=\"mCancel\">Скасувати</button>"+
+          "<button class=\"btn btn-primary\" id=\"mSave\">Зберегти</button>"+
+        "</div>"+
+      "</div>";
+
+    openModalShell(html);
+    document.getElementById("mClose").addEventListener("click", closeModal);
+    document.getElementById("mCancel").addEventListener("click", closeModal);
+
+    var body = document.querySelector(".modal-body");
+    body.querySelectorAll("input[data-field]").forEach(function(inp){
+      inp.addEventListener("input", function(){ draft[inp.getAttribute("data-field")] = inp.value; });
+    });
+    body.querySelectorAll("[data-auto-regen]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var colId = btn.getAttribute("data-auto-regen");
+        var col = state.columns.find(function(c){ return c.id === colId; });
+        var next = (state.counters[colId]||0) + 1;
+        state.counters[colId] = next;
+        var val = generateAutoValue(col, next);
+        draft[colId] = val;
+        var inp = body.querySelector("input[data-field=\""+colId+"\"]");
+        inp.value = val;
+        persist(state);
+      });
+    });
+    body.querySelectorAll("[data-select-field]").forEach(function(inp){
+      var colId = inp.getAttribute("data-select-field");
+      var dirKey = inp.getAttribute("data-dir");
+      attachComboBox(inp, dirKey, colId, draft);
+    });
+    body.querySelectorAll("[data-status-field]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var colId = btn.getAttribute("data-status-field");
+        var items = (state.directories.statuses||[]).map(function(s){ return {key:s.label, label:s.label, color:s.color}; });
+        openOptionPopover(btn, {
+          items: items,
+          selectedKey: draft[colId],
+          placeholder: "Пошук статусу…",
+          onSelect: function(key){
+            draft[colId] = key;
+            var st = statusOf(key);
+            btn.innerHTML = "<span class=\"status-pill\" style=\"background:"+st.color+"22;color:"+st.color+"\"><span class=\"status-dot\" style=\"background:"+st.color+"\"></span>"+esc(st.label)+"</span>"+iconChevDown();
+          },
+          onAdd: function(text){
+            var color = SWATCHES[(state.directories.statuses||[]).length % SWATCHES.length];
+            state.directories.statuses.push({label:text, color:color});
+            persist(state);
+            return text;
+          }
+        });
+      });
+    });
+
+    if(editing){
+      document.getElementById("mDelete").addEventListener("click", function(){
+        confirmDialog({title:"Видалити заявку?", text:"Цю дію не можна скасувати.", confirmLabel:"Видалити"}).then(function(ok){
+          if(!ok) return;
+          state.rows = state.rows.filter(function(r){ return r.id !== rowId; });
+          persist(state);
+          closeModal();
+          renderRows();
+          showToast("Заявку видалено");
+        });
+      });
+    }
+
+    document.getElementById("mSave").addEventListener("click", function(){
+      row.values = draft;
+      if(!editing){
+        state.columns.forEach(function(c){
+          if(c.auto) state.counters[c.id] = (state.counters[c.id]||0) + 1;
+        });
+        state.rows.push(row);
+      }
+      persist(state);
+      closeModal();
+      renderAll();
+      showToast(editing ? "Зміни збережено" : "Заявку додано");
+    });
+  }
+
+  /* ============ columns manager ============ */
+  var newColType = "text";
+
+  function typeLabel(t){
+    return {text:"Текст", date:"Дата", select:"Список", status:"Статус"}[t] || t;
+  }
+
+  function openColumnsModal(){
+    renderColumnsModal();
+  }
+
+  function renderColumnsModal(){
+    var rowsHtml = state.columns.map(function(c, i){
+      var dirTag = (c.type==="select"||c.type==="status") ? "<span class=\"col-dir-name\">"+esc(directoryLabel(c.directory))+"</span>" : "";
+      var autoTag = c.auto ? "<span class=\"col-dir-name\">авто</span>" : "";
+      return "<div class=\"col-row\" data-col-id=\""+c.id+"\">"+
+        "<div class=\"col-reorder\">"+
+          "<button data-move=\"up\" "+(i===0?"disabled":"")+" title=\"Вгору\">▲</button>"+
+          "<button data-move=\"down\" "+(i===state.columns.length-1?"disabled":"")+" title=\"Вниз\">▼</button>"+
+        "</div>"+
+        "<input class=\"col-label-input\" data-rename value=\""+esc(c.label)+"\">"+
+        "<span class=\"col-type-badge\">"+typeLabel(c.type)+"</span>"+
+        dirTag+autoTag+
+        "<button class=\"btn btn-icon btn-ghost btn-sm\" data-delete-col title=\"Видалити стовпець\">"+iconTrash()+"</button>"+
+      "</div>";
+    }).join("");
+
+    var dirOptions = Object.keys(state.directories).map(function(k){
+      return "<option value=\""+esc(k)+"\">"+esc(directoryLabel(k))+"</option>";
+    }).join("") + "<option value=\"__new__\">+ Новий довідник…</option>";
+
+    var html =
+      "<div class=\"modal-head\"><h2>Стовпці журналу</h2><button class=\"modal-close\" id=\"mClose\">"+iconX()+"</button></div>"+
+      "<div class=\"modal-body\">"+
+        "<div id=\"colList\">"+rowsHtml+"</div>"+
+        "<div class=\"add-col-box\">"+
+          "<h3>Додати стовпець</h3>"+
+          "<div class=\"field\"><input type=\"text\" id=\"newColLabel\" placeholder=\"Назва стовпця\"></div>"+
+          "<div class=\"type-toggle\" id=\"typeToggle\">"+
+            "<button data-t=\"text\" class=\""+(newColType==="text"?"active":"")+"\">Текст</button>"+
+            "<button data-t=\"date\" class=\""+(newColType==="date"?"active":"")+"\">Дата</button>"+
+            "<button data-t=\"select\" class=\""+(newColType==="select"?"active":"")+"\">Список (довідник)</button>"+
+            "<button data-t=\"status\" class=\""+(newColType==="status"?"active":"")+"\">Статус</button>"+
+          "</div>"+
+          "<div id=\"typeExtra\"></div>"+
+          "<button class=\"btn btn-primary btn-sm\" id=\"btnAddColumn\">+ Додати</button>"+
+        "</div>"+
+      "</div>"+
+      "<div class=\"modal-foot\"><button class=\"btn btn-primary\" id=\"mDone\">Готово</button></div>";
+
+    openModalShell(html, {wide:true});
+    document.getElementById("mClose").addEventListener("click", closeModal);
+    document.getElementById("mDone").addEventListener("click", closeModal);
+
+    function renderTypeExtra(){
+      var extra = document.getElementById("typeExtra");
+      if(newColType === "select"){
+        extra.innerHTML = "<div class=\"field\"><label>Довідник</label><select id=\"newColDir\" class=\"filter-select\" style=\"width:100%;\">"+dirOptions+"</select></div>"+
+          "<div class=\"field\" id=\"newDirNameWrap\" style=\"display:none;\"><label>Назва нового довідника</label><input type=\"text\" id=\"newDirName\" placeholder=\"напр. Види обладнання\"></div>";
+        var sel = document.getElementById("newColDir");
+        sel.addEventListener("change", function(){
+          document.getElementById("newDirNameWrap").style.display = sel.value === "__new__" ? "" : "none";
+        });
+      } else if(newColType === "text"){
+        extra.innerHTML = "<div class=\"checkbox-row\"><input type=\"checkbox\" id=\"newColAuto\"><label for=\"newColAuto\">Автонумерація (автоматично присвоювати номер)</label></div>"+
+          "<div class=\"field\" id=\"newColPrefixWrap\" style=\"display:none;\"><label>Префікс номера (необов'язково)</label><input type=\"text\" id=\"newColPrefix\" placeholder=\"напр. Д-\"></div>";
+        document.getElementById("newColAuto").addEventListener("change", function(e){
+          document.getElementById("newColPrefixWrap").style.display = e.target.checked ? "" : "none";
+        });
+      } else {
+        extra.innerHTML = "";
+      }
+    }
+    renderTypeExtra();
+
+    document.querySelectorAll("#typeToggle button").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        newColType = btn.getAttribute("data-t");
+        document.querySelectorAll("#typeToggle button").forEach(function(b){ b.classList.remove("active"); });
+        btn.classList.add("active");
+        renderTypeExtra();
+      });
+    });
+
+    document.querySelectorAll("#colList [data-move]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var row = btn.closest(".col-row");
+        var id = row.getAttribute("data-col-id");
+        var idx = state.columns.findIndex(function(c){ return c.id===id; });
+        var dir = btn.getAttribute("data-move");
+        var swapWith = dir === "up" ? idx-1 : idx+1;
+        if(swapWith < 0 || swapWith >= state.columns.length) return;
+        var tmp = state.columns[idx];
+        state.columns[idx] = state.columns[swapWith];
+        state.columns[swapWith] = tmp;
+        persist(state);
+        renderColumnsModal();
+        renderAll();
+      });
+    });
+
+    document.querySelectorAll("#colList [data-rename]").forEach(function(inp){
+      inp.addEventListener("change", function(){
+        var row = inp.closest(".col-row");
+        var id = row.getAttribute("data-col-id");
+        var col = state.columns.find(function(c){ return c.id===id; });
+        col.label = inp.value.trim() || col.label;
+        persist(state);
+        renderAll();
+      });
+    });
+
+    document.querySelectorAll("#colList [data-delete-col]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var row = btn.closest(".col-row");
+        var id = row.getAttribute("data-col-id");
+        if(state.columns.length <= 1){
+          showToast("У журналі має лишитись хоча б один стовпець","error");
+          return;
+        }
+        confirmDialog({title:"Видалити стовпець?", text:"Дані в цьому стовпці для всіх заявок буде втрачено.", confirmLabel:"Видалити"}).then(function(ok){
+          if(!ok) return;
+          state.columns = state.columns.filter(function(c){ return c.id !== id; });
+          state.rows.forEach(function(r){ delete r.values[id]; });
+          delete filters.dateRanges[id];
+          delete filters.selectFilters[id];
+          delete filters.statusFilters[id];
+          delete filters.textFilters[id];
+          persist(state);
+          renderColumnsModal();
+          renderAll();
+          showToast("Стовпець видалено");
+        });
+      });
+    });
+
+    document.getElementById("btnAddColumn").addEventListener("click", function(){
+      var label = document.getElementById("newColLabel").value.trim();
+      if(!label){ showToast("Введіть назву стовпця","error"); return; }
+      var col = { id: uid("col"), label: label, type: newColType };
+      if(newColType === "select"){
+        var dirSel = document.getElementById("newColDir").value;
+        if(dirSel === "__new__"){
+          var newName = document.getElementById("newDirName").value.trim();
+          if(!newName){ showToast("Введіть назву нового довідника","error"); return; }
+          var key = "dir_" + uid("");
+          state.directories[key] = [];
+          state.directoryLabels[key] = newName;
+          col.directory = key;
+        } else {
+          col.directory = dirSel;
+        }
+      } else if(newColType === "status"){
+        col.directory = "statuses";
+      } else if(newColType === "text"){
+        var autoChecked = document.getElementById("newColAuto").checked;
+        if(autoChecked){
+          col.auto = true;
+          col.autoPrefix = document.getElementById("newColPrefix").value.trim();
+          state.counters[col.id] = 0;
+        }
+      }
+      state.columns.push(col);
+      persist(state);
+      document.getElementById("newColLabel").value = "";
+      renderColumnsModal();
+      renderAll();
+      showToast("Стовпець додано");
+    });
+  }
+
+  /* ============ directories manager ============ */
+  var activeDirTab = "customers";
+
+  function openDirectoriesModal(){
+    if(!state.directories[activeDirTab]) activeDirTab = Object.keys(state.directories)[0];
+    renderDirectoriesModal();
+  }
+
+  function renderDirectoriesModal(){
+    var tabsHtml = Object.keys(state.directories).map(function(k){
+      return "<button class=\"dir-tab"+(k===activeDirTab?" active":"")+"\" data-tab=\""+esc(k)+"\">"+esc(directoryLabel(k))+"</button>";
+    }).join("");
+
+    var isStatus = activeDirTab === "statuses";
+    var entries = state.directories[activeDirTab] || [];
+    var listHtml = entries.map(function(entry, i){
+      if(isStatus){
+        var swHtml = SWATCHES.map(function(sw){
+          return "<span class=\"swatch"+(sw===entry.color?" active-swatch":"")+"\" style=\"background:"+sw+"\" data-swatch=\""+sw+"\" data-idx=\""+i+"\"></span>";
+        }).join("");
+        return "<div class=\"dir-entry\">"+
+          "<input type=\"text\" data-entry-label data-idx=\""+i+"\" value=\""+esc(entry.label)+"\">"+
+          "<div class=\"swatch-row\">"+swHtml+"</div>"+
+          "<button class=\"btn btn-icon btn-ghost btn-sm\" data-remove-entry data-idx=\""+i+"\">"+iconTrash()+"</button>"+
+        "</div>";
+      }
+      return "<div class=\"dir-entry\">"+
+        "<input type=\"text\" data-entry-label data-idx=\""+i+"\" value=\""+esc(entry)+"\">"+
+        "<button class=\"btn btn-icon btn-ghost btn-sm\" data-remove-entry data-idx=\""+i+"\">"+iconTrash()+"</button>"+
+      "</div>";
+    }).join("") || "<p style=\"color:var(--ink-faint);font-size:12.5px;\">Список порожній. Додайте перший запис нижче.</p>";
+
+    var html =
+      "<div class=\"modal-head\"><h2>Довідники</h2><button class=\"modal-close\" id=\"mClose\">"+iconX()+"</button></div>"+
+      "<div class=\"modal-body\">"+
+        "<div class=\"dir-tabs\">"+tabsHtml+"</div>"+
+        "<div id=\"dirList\">"+listHtml+"</div>"+
+        "<div class=\"add-entry-row\">"+
+          "<input type=\"text\" id=\"newEntryInput\" placeholder=\"Новий запис…\">"+
+          "<button class=\"btn btn-primary btn-sm\" id=\"btnAddEntry\">Додати</button>"+
+        "</div>"+
+      "</div>"+
+      "<div class=\"modal-foot\"><button class=\"btn btn-primary\" id=\"mDone\">Готово</button></div>";
+
+    openModalShell(html, {wide:true});
+    document.getElementById("mClose").addEventListener("click", closeModal);
+    document.getElementById("mDone").addEventListener("click", closeModal);
+
+    document.querySelectorAll(".dir-tab").forEach(function(tab){
+      tab.addEventListener("click", function(){
+        activeDirTab = tab.getAttribute("data-tab");
+        renderDirectoriesModal();
+      });
+    });
+
+    document.querySelectorAll("[data-entry-label]").forEach(function(inp){
+      inp.addEventListener("change", function(){
+        var idx = parseInt(inp.getAttribute("data-idx"), 10);
+        if(isStatus) state.directories[activeDirTab][idx].label = inp.value;
+        else state.directories[activeDirTab][idx] = inp.value;
+        persist(state);
+        renderAll();
+      });
+    });
+
+    document.querySelectorAll("[data-swatch]").forEach(function(sw){
+      sw.addEventListener("click", function(){
+        var idx = parseInt(sw.getAttribute("data-idx"), 10);
+        state.directories.statuses[idx].color = sw.getAttribute("data-swatch");
+        persist(state);
+        renderDirectoriesModal();
+        renderAll();
+      });
+    });
+
+    document.querySelectorAll("[data-remove-entry]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var idx = parseInt(btn.getAttribute("data-idx"), 10);
+        state.directories[activeDirTab].splice(idx, 1);
+        persist(state);
+        renderDirectoriesModal();
+        renderAll();
+      });
+    });
+
+    document.getElementById("btnAddEntry").addEventListener("click", function(){
+      var val = document.getElementById("newEntryInput").value.trim();
+      if(!val) return;
+      if(isStatus){
+        var color = SWATCHES[entries.length % SWATCHES.length];
+        state.directories.statuses.push({label:val, color:color});
+      } else {
+        state.directories[activeDirTab].push(val);
+      }
+      persist(state);
+      renderDirectoriesModal();
+      renderAll();
+    });
+  }
+
+  /* ============ export ============ */
+  function openExportModal(){
+    var headers = ["№ п/п"].concat(state.columns.map(function(c){ return c.label; }));
+    var lines = [headers.map(csvEscape).join(",")];
+    state.rows.forEach(function(r, i){
+      var line = [i+1].concat(state.columns.map(function(c){
+        var v = r.values[c.id] || "";
+        if(c.type === "date" && v) v = fmtDate(v);
+        return v;
+      }));
+      lines.push(line.map(csvEscape).join(","));
+    });
+    var csv = lines.join("\r\n");
+
+    var html =
+      "<div class=\"modal-head\"><h2>Експорт журналу (CSV)</h2><button class=\"modal-close\" id=\"mClose\">"+iconX()+"</button></div>"+
+      "<div class=\"modal-body\">"+
+        "<p style=\"font-size:12.5px;color:var(--ink-soft);margin-top:0;\">Скопіюйте вміст нижче і вставте в Excel / Google Таблиці, або натисніть «Копіювати».</p>"+
+        "<textarea readonly style=\"width:100%;height:260px;font-family:var(--mono);font-size:12px;padding:10px;border:1px solid var(--border-strong);border-radius:4px;\" id=\"csvArea\">"+esc(csv)+"</textarea>"+
+      "</div>"+
+      "<div class=\"modal-foot\"><button class=\"btn btn-ghost\" id=\"mClose2\">Закрити</button><button class=\"btn btn-primary\" id=\"btnCopy\">Копіювати</button></div>";
+    openModalShell(html, {wide:true});
+    document.getElementById("mClose").addEventListener("click", closeModal);
+    document.getElementById("mClose2").addEventListener("click", closeModal);
+    document.getElementById("btnCopy").addEventListener("click", function(){
+      var area = document.getElementById("csvArea");
+      area.focus(); area.select();
+      var ok = false;
+      try{
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(csv);
+          ok = true;
+        }
+      }catch(e){}
+      if(!ok){
+        try{ ok = document.execCommand("copy"); }catch(e){ ok = false; }
+      }
+      showToast(ok ? "Скопійовано в буфер обміну" : "Не вдалося скопіювати автоматично — виділіть текст і натисніть Ctrl+C");
+    });
+  }
+  function csvEscape(v){
+    v = String(v==null ? "" : v);
+    if(/[",\n\r]/.test(v)) v = "\"" + v.replace(/"/g,'""') + "\"";
+    return v;
+  }
+
+  /* ============ password gate ============ */
+  function onAuthenticated(){
+    document.getElementById("lockLayer").innerHTML = "";
+    document.getElementById("app").style.display = "";
+    wireControls();
+    renderAll();
+  }
+
+  function renderCreatePasswordScreen(){
+    var layer = document.getElementById("lockLayer");
+    layer.innerHTML =
+      "<div class=\"lock-overlay\"><div class=\"lock-card\">"+
+        lockBrandHtml()+
+        "<p class=\"lock-intro\">Це перший запуск журналу. Встановіть пароль доступу — його вводитимуть усі, хто відкриває цей документ.</p>"+
+        "<div class=\"field\"><label>Новий пароль</label><input type=\"password\" id=\"lpPass1\" autocomplete=\"new-password\"></div>"+
+        "<div class=\"field\"><label>Повторіть пароль</label><input type=\"password\" id=\"lpPass2\" autocomplete=\"new-password\"></div>"+
+        "<div class=\"lock-error\" id=\"lpError\"></div>"+
+        "<button class=\"btn btn-primary\" style=\"width:100%;justify-content:center;\" id=\"lpSubmit\">Зберегти пароль і відкрити журнал</button>"+
+        "<p class=\"lock-hint\">Пароль спільний для всіх користувачів журналу. Відновити його через інтерфейс неможливо — запишіть у надійному місці.</p>"+
+      "</div></div>";
+    function submit(){
+      var p1 = document.getElementById("lpPass1").value;
+      var p2 = document.getElementById("lpPass2").value;
+      var err = document.getElementById("lpError");
+      if(!p1 || p1.length < 4){ err.textContent = "Пароль має містити щонайменше 4 символи"; return; }
+      if(p1 !== p2){ err.textContent = "Паролі не збігаються"; return; }
+      state.settings.password = p1;
+      persist(state, true);
+      onAuthenticated();
+    }
+    document.getElementById("lpSubmit").addEventListener("click", submit);
+    layer.querySelectorAll("input").forEach(function(inp){
+      inp.addEventListener("keydown", function(e){ if(e.key === "Enter") submit(); });
+    });
+    document.getElementById("lpPass1").focus();
+  }
+
+  function renderLoginScreen(){
+    var layer = document.getElementById("lockLayer");
+    layer.innerHTML =
+      "<div class=\"lock-overlay\"><div class=\"lock-card\">"+
+        lockBrandHtml()+
+        "<div class=\"field\"><label>Пароль</label><input type=\"password\" id=\"lpPass\" autocomplete=\"current-password\"></div>"+
+        "<div class=\"lock-error\" id=\"lpError\"></div>"+
+        "<button class=\"btn btn-primary\" style=\"width:100%;justify-content:center;\" id=\"lpSubmit\">Увійти</button>"+
+      "</div></div>";
+    var input = document.getElementById("lpPass");
+    function tryLogin(){
+      if(input.value === state.settings.password){
+        onAuthenticated();
+      } else {
+        document.getElementById("lpError").textContent = "Невірний пароль";
+        input.value = "";
+        input.focus();
+      }
+    }
+    document.getElementById("lpSubmit").addEventListener("click", tryLogin);
+    input.addEventListener("keydown", function(e){ if(e.key === "Enter") tryLogin(); });
+    input.focus();
+  }
+
+  function openChangePasswordModal(){
+    var html =
+      "<div class=\"modal-head\"><h2>Змінити пароль</h2><button class=\"modal-close\" id=\"mClose\">"+iconX()+"</button></div>"+
+      "<div class=\"modal-body\">"+
+        "<div class=\"field\"><label>Поточний пароль</label><input type=\"password\" id=\"cpOld\"></div>"+
+        "<div class=\"field\"><label>Новий пароль</label><input type=\"password\" id=\"cpNew1\"></div>"+
+        "<div class=\"field\"><label>Повторіть новий пароль</label><input type=\"password\" id=\"cpNew2\"></div>"+
+        "<div class=\"lock-error\" id=\"cpError\"></div>"+
+      "</div>"+
+      "<div class=\"modal-foot\"><button class=\"btn btn-ghost\" id=\"mCancel\">Скасувати</button><button class=\"btn btn-primary\" id=\"cpSave\">Зберегти</button></div>";
+    openModalShell(html, {narrow:true});
+    document.getElementById("mClose").addEventListener("click", closeModal);
+    document.getElementById("mCancel").addEventListener("click", closeModal);
+    document.getElementById("cpSave").addEventListener("click", function(){
+      var old = document.getElementById("cpOld").value;
+      var n1 = document.getElementById("cpNew1").value;
+      var n2 = document.getElementById("cpNew2").value;
+      var err = document.getElementById("cpError");
+      if(old !== state.settings.password){ err.textContent = "Поточний пароль невірний"; return; }
+      if(!n1 || n1.length < 4){ err.textContent = "Новий пароль має містити щонайменше 4 символи"; return; }
+      if(n1 !== n2){ err.textContent = "Паролі не збігаються"; return; }
+      state.settings.password = n1;
+      persist(state, true);
+      closeModal();
+      showToast("Пароль змінено");
+    });
+  }
+
+  /* ============ wire up top-level controls ============ */
+  var controlsWired = false;
+  function wireControls(){
+    if(controlsWired) return;
+    controlsWired = true;
+    document.getElementById("btnAddRow").addEventListener("click", function(){ openRequestModal(null); });
+    document.getElementById("btnAddRowEmpty").addEventListener("click", function(){ openRequestModal(null); });
+    document.getElementById("btnColumns").addEventListener("click", openColumnsModal);
+    document.getElementById("btnDirectories").addEventListener("click", openDirectoriesModal);
+    document.getElementById("btnExport").addEventListener("click", openExportModal);
+    document.getElementById("btnChangePassword").addEventListener("click", openChangePasswordModal);
+    document.getElementById("btnLock").addEventListener("click", function(){
+      closeModal();
+      document.getElementById("app").style.display = "none";
+      renderLoginScreen();
+    });
+    document.getElementById("searchInput").addEventListener("input", function(e){
+      filters.q = e.target.value.trim();
+      renderRows();
+    });
+  }
+
+  function renderSetupNeededScreen(){
+    var layer = document.getElementById("lockLayer");
+    layer.innerHTML =
+      "<div class=\"lock-overlay\"><div class=\"lock-card\" style=\"max-width:440px;\">"+
+        lockBrandHtml()+
+        "<p class=\"lock-intro\" style=\"text-align:left;\">Журнал ще не підключено до сховища даних. У файлі, в тезі <code>&lt;script&gt;</code>, знайдіть рядки:</p>"+
+        "<p style=\"font-family:var(--mono);font-size:11.5px;background:var(--surface-2);border:1px solid var(--border);border-radius:4px;padding:8px 10px;overflow:auto;\">var APPS_SCRIPT_URL = \"СЮДИ_ВСТАВТЕ_URL_ДОДАТКУ\";<br>var ACCESS_KEY = \"СЮДИ_ВСТАВТЕ_СЕКРЕТНИЙ_КЛЮЧ\";</p>"+
+        "<p class=\"lock-intro\" style=\"text-align:left;\">і вставте URL вашого Apps Script Web App та секретний ключ (той самий, що й у Code.gs), після чого збережіть файл і оновіть сторінку.</p>"+
+        "<button class=\"btn btn-primary\" style=\"width:100%;justify-content:center;\" id=\"setupRetry\">Оновити сторінку</button>"+
+      "</div></div>";
+    document.getElementById("setupRetry").addEventListener("click", function(){ location.reload(); });
+  }
+
+  function renderAuthErrorScreen(){
+    var layer = document.getElementById("lockLayer");
+    layer.innerHTML =
+      "<div class=\"lock-overlay\"><div class=\"lock-card\" style=\"max-width:440px;\">"+
+        lockBrandHtml()+
+        "<p class=\"lock-intro\" style=\"text-align:left;\">Бекенд відповів «невірний ключ доступу». Значення <code>ACCESS_KEY</code> у цьому HTML-файлі не збігається зі значенням <code>ACCESS_KEY</code> у Code.gs вашого Apps Script. Перевірте, що обидва рядки — точна копія одне одного (без зайвих пробілів), збережіть файли і спробуйте ще раз.</p>"+
+        "<button class=\"btn btn-primary\" style=\"width:100%;justify-content:center;\" id=\"authRetry\">Спробувати знову</button>"+
+      "</div></div>";
+    document.getElementById("authRetry").addEventListener("click", function(){ location.reload(); });
+  }
+
+  function renderConnectionErrorScreen(){
+    var layer = document.getElementById("lockLayer");
+    layer.innerHTML =
+      "<div class=\"lock-overlay\"><div class=\"lock-card\" style=\"max-width:440px;\">"+
+        lockBrandHtml()+
+        "<p class=\"lock-intro\" style=\"text-align:left;\">Не вдалося з'єднатися з бекендом журналу. Перевірте інтернет-з'єднання, правильність URL Apps Script у файлі, і що розгорнутий пакет має доступ «Anyone».</p>"+
+        "<button class=\"btn btn-primary\" style=\"width:100%;justify-content:center;\" id=\"connRetry\">Спробувати знову</button>"+
+      "</div></div>";
+    document.getElementById("connRetry").addEventListener("click", function(){ location.reload(); });
+  }
+
+  /* ============ init ============ */
+  async function init(){
+    if(!isConfigured()){
+      renderSetupNeededScreen();
+      return;
+    }
+    try{
+      state = await loadState();
+    }catch(e){
+      if(e && e.isAuthError) renderAuthErrorScreen();
+      else renderConnectionErrorScreen();
+      return;
+    }
+    if(state.settings.password){
+      renderLoginScreen();
+    } else {
+      renderCreatePasswordScreen();
+    }
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
